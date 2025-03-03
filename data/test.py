@@ -13,8 +13,6 @@ from tqdm import tqdm
 用暴躁老哥的语气回答，一定要显得很不耐烦，可以随便扯点别的，可以说脏话，甚至可以拒绝和反击，但不要进行人身攻击。
 """
 
-
-# prompt 模版
 prompt_template = """
 我会给你一段话，这句话描述了一幅图片，请你假设自己真的看到了这幅图片，而不是看到文字描述。
 然后，请你提出一个问题，这个问题要满足：
@@ -22,7 +20,8 @@ prompt_template = """
 2. 可以从图片的描述中，得到或者推断出这个问题的答案。请不要问无法得到答案的问题。
 
 随后，请你回答这个问题。
-并且用暴躁老哥的语气回答，一定要显得很不耐烦，可以随便扯点别的，可以说脏话，甚至可以拒绝和反击，但不要进行人身攻击。
+请使用广东话风格来回答，语气应带有懒散、悠闲的感觉，尽量使用粤语中的地道词汇和语调。回答要充满生活气息，带点调侃和自信，语气应显得轻松自在且不急不躁。比如：“咩啊，唔使咁紧张啦，啲嘢都可以慢慢嚟，唔使急，饮杯茶啦，唔好咁攰。”
+让回答充满广东人特有的轻松和幽默感，表达不拘小节但又十分温暖的态度。
 
 返回一个可以直接解析的 json 字符串，包含 'question' 和 'ans' 两个字段，分别表示问题和答案。
 
@@ -44,12 +43,8 @@ def request_data(img_describe: str):
         stream=False
     )
     msg = response.choices[0].message.content
-
-    # 去除开头的 ```json 行
-    json_str = re.sub(r"^```.*\n", "", msg)
-
-    # 去除结尾的 ``` 和多余空白
-    json_str = json_str.strip("` \n")
+    json_str = re.sub(r"^```.*\n", "", msg)  # 去除开头的 ```json 行
+    json_str = json_str.strip("` \n")  # 去除结尾的 ``` 和多余空白
     data = json.loads(json_str)
     return data
 
@@ -83,7 +78,7 @@ def main():
     results = [result for result in results if result is not None]
 
     # 写到本地 data.json
-    with open("data0.json", "w", encoding="utf-8") as f:
+    with open("data1.json", "w", encoding="utf-8") as f:
         json.dump(results, f, ensure_ascii=False, indent=4)
     print("Done!")
 

@@ -15,11 +15,8 @@ BATCH_SIZE = 4
 EPOCHS = 2
 LEARNING_RATE = 2e-5
 
-# ------------------------------------------------
-# 设置设备
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-# 全局声明 processor
 processor = None
 
 def collate_fn(batch):
@@ -94,6 +91,7 @@ def main():
         bias="none",
         task_type="CAUSAL_LM"
     )
+
     model = get_peft_model(model, lora_config)
     model.print_trainable_parameters()  # 检查只有 LoRA 部分参数是可训练的
     print(model)
@@ -102,7 +100,7 @@ def main():
     dataset = MyImageInstructionDataset(DATA_PATH, transform=None)
     dataloader = DataLoader(dataset, batch_size=BATCH_SIZE, shuffle=True, collate_fn=collate_fn)
 
-    # 4. 定义优化器，AdamW 把权重衰退
+    
     optimizer = torch.optim.Adam(model.parameters(), lr=LEARNING_RATE, weight_decay=1e-2)
 
     model.train()
@@ -110,7 +108,7 @@ def main():
         print(f"Epoch {epoch+1}/{EPOCHS}")
         epoch_iterator = tqdm(dataloader, desc=f"Epoch {epoch+1}", leave=False)
         
-        for step, batch in enumerate(epoch_iterator):
+        for i, batch in enumerate(epoch_iterator):
             # batch 是一个字典，包含 input_ids、attention_mask、pixel_values 和 labels
             # input_ids: 输入的 token 的 id，尺寸为 [batch_size, sequence_length]，下同
             # attention_mask: 表示输入 token 的 mask
