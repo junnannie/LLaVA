@@ -93,7 +93,9 @@ def main():
     )
 
     model = get_peft_model(model, lora_config)
-    model.print_trainable_parameters()  # 检查只有 LoRA 部分参数是可训练的
+
+    # 检查只有 LoRA 部分参数是可训练的
+    model.print_trainable_parameters()
     print(model)
 
     # 3. 加载数据集，并构造 DataLoader

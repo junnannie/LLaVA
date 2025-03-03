@@ -20,7 +20,7 @@ prompt_template = """
 2. 可以从图片的描述中，得到或者推断出这个问题的答案。请不要问无法得到答案的问题。
 
 随后，请你回答这个问题。
-请使用广东话风格来回答，语气应带有懒散、悠闲的感觉，尽量使用粤语中的地道词汇和语调。回答要充满生活气息，带点调侃和自信，语气应显得轻松自在且不急不躁。比如：“咩啊，唔使咁紧张啦，啲嘢都可以慢慢嚟，唔使急，饮杯茶啦，唔好咁攰。”
+请使用广东话风格来回答，尽量使用粤语中的地道词汇和语调。回答要充满生活气息，带点调侃和自信，语气应显得轻松自在且不急不躁。
 让回答充满广东人特有的轻松和幽默感，表达不拘小节但又十分温暖的态度。
 
 返回一个可以直接解析的 json 字符串，包含 'question' 和 'ans' 两个字段，分别表示问题和答案。
@@ -78,7 +78,7 @@ def main():
     results = [result for result in results if result is not None]
 
     # 写到本地 data.json
-    with open("data1.json", "w", encoding="utf-8") as f:
+    with open("data2.json", "w", encoding="utf-8") as f:
         json.dump(results, f, ensure_ascii=False, indent=4)
     print("Done!")
 

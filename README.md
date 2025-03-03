@@ -58,7 +58,7 @@ git clone https://www.modelscope.cn/llava-hf/llava-1.5-7b-hf.git
 
 ### Step5：构造数据（可选）
 
-`data/make_data.py` 第 X 行，修改 API Key，推荐用 DeepSeek-V3，在 00:30-08:30 调用，主打的就是一个便宜
+`data/make_data.py` 第 24 行，修改 API Key，推荐用 DeepSeek-V3，在 00:30-08:30 调用，主打的就是一个便宜
 
 ```bash
 api_key = '你的 API-KEY'
@@ -76,3 +76,10 @@ api_key = '你的 API-KEY'
 
 SA1B:https://www.modelscope.cn/datasets/Tongyi-DataEngine/SA1B-Dense-Caption/summary
 
+
+
+
+
+
+
+用 DeepSeek V3 生成了对这个图片的问题，以及这个图片表示的内容的答案。
