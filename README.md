@@ -1,6 +1,18 @@
+# 多模态风格化问答大模型
+
+该项目是一个多模态风格化问答大模型，结合了视觉和大语言模型，旨在实现基于图像和文本输入的智能问答和风格化输出。
+
+1. **轻量化的 LLaVA 架构**：该模型基于 Qwen2-0.5B 语言模型和自监督预训练的 SigLIP 视觉模型，通过线性投影构造了一个参数量仅为 0.8B 的轻量化多模态模型。
+
+2. **风格化指令数据集**：采用 [SA1B-长文本图文描述](https://www.modelscope.cn/datasets/Tongyi-DataEngine/SA1B-Dense-Caption/summary) 数据集，筛选出 1000 组高质量的图文对，并利用 DeepSeek-V3 实现指令风格迁移，生成广东俚语、暴躁老哥等风格的指令问答对，从而构建了适用于视觉问答和场景解析任务的风格化训练集。
+
+3. **高效参数微调**：通过自主实现 LoRA 微调，仅训练模型约 0.35% 的参数（约 300 万参数）。通过对比试验验证，LoRA 微调与全量微调在效果上几乎无差异，确保了高效的训练性能。
 
 
-Step1：创建 conda 环境
+
+## 安装
+
+### Step1：创建 conda 环境
 
 ```bash
 conda create -n llava python=3.10
@@ -9,7 +21,7 @@ conda activate llava
 
 
 
-Step2：配置 LLaVA
+### Step2：配置 LLaVA
 
 ```bash
 # 安装依赖
@@ -20,7 +32,7 @@ pip install 'accelerate>=0.26.0' -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 
 
-Step3：git clone
+### Step3：git clone
 
 ```bash
 git clone https://github.com/niejnan/LLM.git
@@ -28,7 +40,7 @@ git clone https://github.com/niejnan/LLM.git
 
 
 
-Step4：下载模型权重
+### Step4：下载模型权重
 
 ```bash
 # 安装 git-lfs 
@@ -44,7 +56,7 @@ git clone https://www.modelscope.cn/llava-hf/llava-1.5-7b-hf.git
 
 
 
-Step5：构造数据（可选）
+### Step5：构造数据（可选）
 
 `data/make_data.py` 第 X 行，修改 API Key，推荐用 DeepSeek-V3，在 00:30-08:30 调用，主打的就是一个便宜
 
