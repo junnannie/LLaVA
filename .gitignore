@@ -1,0 +1,1 @@
+echo ".DS_Store" >> .gitignore
