@@ -16,8 +16,9 @@ from tqdm import tqdm
 prompt_template = """
 我会给你一段话，这句话描述了一幅图片，请你假设自己真的看到了这幅图片，而不是看到文字描述。
 然后，请你提出一个问题，这个问题要满足：
-1. 问题和图片相关。
-2. 可以从图片的描述中，得到或者推断出这个问题的答案。请不要问无法得到答案的问题。
+1. 普通话提问
+2. 问题和图片相关。
+3. 可以从图片的描述中，得到或者推断出这个问题的答案。请不要问无法得到答案的问题。
 
 随后，请你回答这个问题。
 请使用广东话风格来回答，尽量使用粤语中的地道词汇和语调。回答要充满生活气息，带点调侃和自信，语气应显得轻松自在且不急不躁。
@@ -78,7 +79,7 @@ def main():
     results = [result for result in results if result is not None]
 
     # 写到本地 data.json
-    with open("data2.json", "w", encoding="utf-8") as f:
+    with open("data4.json", "w", encoding="utf-8") as f:
         json.dump(results, f, ensure_ascii=False, indent=4)
     print("Done!")
 
