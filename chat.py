@@ -40,7 +40,7 @@ def main(model_path, quantization = False, img_url = "http://images.cocodataset.
 
 
     img_url = img_url
-    
+
     # stream=True: 流式传输避免大文件内存溢出
     response = requests.get(img_url, stream=True)
     raw_image = Image.open(response.raw)
@@ -84,6 +84,7 @@ if __name__ == "__main__":
 
     img_url = "http://images.cocodataset.org/val2017/000000039769.jpg"
 
+    
     # model_path = "/mnt/workspace/llava-1.5-7b-hf"
     qunatization = True
 
