@@ -19,11 +19,15 @@ lora_dict = {
         "path": None,
         "weight": None,
     },
-    "anger": {
+    "saleman": {
         "path": "/mnt/workspace/lora_llava_finetuned_manual/anger.bin",
         "weight": None,
     },
-    "writer": {
+    "guangdong_native": {
+        "path": "/mnt/workspace/lora_llava_finetuned_manual/writer.bin",
+        "weight": None,
+    },
+    "angry": {
         "path": "/mnt/workspace/lora_llava_finetuned_manual/writer.bin",
         "weight": None,
     }
