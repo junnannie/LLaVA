@@ -22,7 +22,7 @@ prompt_template = """
 """
 
 # DeepSeek API 密钥
-api_key = 'sk-c2836b35b2874e29813c06eda638f13e'
+api_key = 'your-api-key'
 
 client = OpenAI(api_key=api_key, base_url="https://api.deepseek.com")
 
