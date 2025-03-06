@@ -12,9 +12,12 @@ def main(model_path, quantization = False, img_url = "http://images.cocodataset.
         # INT8 量化
         load_in_8bit=True,
 
+        # load_in_4bit=True,
+
         # 跳过视觉编码器量化
         llm_int8_skip_modules=['vision_tower', 'multi_modal_projector'],
-        # 激活值异常阈值
+        
+        # 激活值异常阈值, 量化时超过 6 激活值将被截断
         llm_int8_threshold=6.0,
     )
 
@@ -34,7 +37,6 @@ def main(model_path, quantization = False, img_url = "http://images.cocodataset.
 
     model.eval()
 
-    # 加载处理器参数说明：
     # 与模型同路径确保tokenizer和image_processor版本匹配
     processor = AutoProcessor.from_pretrained(model_path)
 
@@ -44,7 +46,6 @@ def main(model_path, quantization = False, img_url = "http://images.cocodataset.
     # stream=True: 流式传输避免大文件内存溢出
     response = requests.get(img_url, stream=True)
     raw_image = Image.open(response.raw)
-
 
     while True:
         user_input = input("🤗：")
