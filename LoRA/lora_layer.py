@@ -4,7 +4,11 @@ import torch.nn.functional as F
 
 
 class LoRALayer(nn.Module):
+    """
+    手动实现 LoRA 层
+    """
     def __init__(self, original_layer, rank, alpha):
+        
         super().__init__()
         self.rank = rank
         self.alpha = alpha

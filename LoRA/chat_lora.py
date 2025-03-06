@@ -20,15 +20,15 @@ lora_dict = {
         "weight": None,
     },
     "saleman": {
-        "path": "/mnt/workspace/lora_llava_finetuned_manual/anger.bin",
+        "path": "/mnt/workspace/lora_llava_finetuned_manual/saleman.bin",
         "weight": None,
     },
     "guangdong_native": {
-        "path": "/mnt/workspace/lora_llava_finetuned_manual/writer.bin",
+        "path": "/mnt/workspace/lora_llava_finetuned_manual/guangdong_native.bin",
         "weight": None,
     },
     "angry": {
-        "path": "/mnt/workspace/lora_llava_finetuned_manual/writer.bin",
+        "path": "/mnt/workspace/lora_llava_finetuned_manual/angry.bin",
         "weight": None,
     }
 }
@@ -65,7 +65,6 @@ def main():
 
     model.eval()
 
-    # 下载图片参数说明：
     # stream=True: 流式传输避免大文件内存溢出
     img_url = "http://images.cocodataset.org/val2017/000000039769.jpg"
     response = requests.get(img_url, stream=True)
@@ -89,16 +88,35 @@ def main():
             except Exception as e:
                 print(f"图片加载失败：{e}")
                 continue
+        
+        if user_input == "Switch style to angry" or user_input == "Switch style to saleman" or user_input == "Switch style to guangdong_native" or user_input == "Switch style to base":
+            lora_name = "base"
 
-        if user_input == "lora":
             # 加载指定的 lora 权重
-            lora_name = input("lora 名称：")
-            if lora_name not in lora_dict:
-                print(f"名为 {lora_name} 的 lora 权重不存在")
+            if user_input == "Switch style to angry":
+                lora_name = "angry"
+            elif user_input == "Switch style to saleman":
+                lora_name = "saleman"
+            elif user_input == "Switch style to guangdong_native":
+                lora_name = "guangdong_native"
+            elif user_input == "Switch style to base":
+                lora_name = "base"
+            else:
+                print(f"您输入的风格不存在")
                 continue
 
             load_lora_weight(model, lora_dict[lora_name]["weight"])
-            continue
+            print(f"已切换至 {lora_name} 风格")
+        
+        # if user_input == "lora":
+        #     # 加载指定的 lora 权重
+        #     lora_name = input("lora 名称：")
+        #     if lora_name not in lora_dict:
+        #         print(f"名为 {lora_name} 的 lora 权重不存在")
+        #         continue
+
+        #     load_lora_weight(model, lora_dict[lora_name]["weight"])
+        #     continue
 
         # 构造模型输入
         conversation = [{

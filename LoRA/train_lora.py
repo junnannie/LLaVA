@@ -21,7 +21,7 @@ EPOCHS = 2
 LEARNING_RATE = 2e-5
 lora_config = LoraConfig()
 
-# ------------------------------------------------
+
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 processor = None
 
@@ -88,22 +88,32 @@ def main():
         low_cpu_mem_usage=True,
     )
     processor = AutoProcessor.from_pretrained(MODEL_PATH)
+
+    # 打印原始模型
     print('model:')
     print(model)
 
-    # 2. 手动应用LoRA
+    # 2. 手动应用LoRA, model, 被替换的模块名称, rank, alpha
     model = apply_lora(model, lora_config.target_modules, lora_config.rank, lora_config.alpha)
     model = model.to(device)
+
+    # 打印 LoRA 替换后的模型
     print('model:')
     print(model)
     
     # 3. 设置可训练参数
     trainable_params = []
+    
     for name, param in model.named_parameters():
+
         if 'lora_A' in name or 'lora_B' in name:
+
+            # LoRA 权重需要训练
             param.requires_grad = True
             trainable_params.append(param)
         else:
+
+            # 其他参数不需要训练
             param.requires_grad = False
 
     print(f"可训练参数数量: {len(trainable_params)}")
@@ -112,11 +122,12 @@ def main():
     dataset = MyImageInstructionDataset(DATA_PATH, transform=None)
     dataloader = DataLoader(dataset, batch_size=BATCH_SIZE, shuffle=True, collate_fn=collate_fn)
 
-    # 5. 优化器设置
+    # 5. 优化器传入可训练参数,
     optimizer = torch.optim.AdamW(trainable_params, lr=LEARNING_RATE)
 
     # 6. 训练循环
     model.train()
+
     for epoch in range(EPOCHS):
         print(f"Epoch {epoch+1}/{EPOCHS}")
         epoch_iterator = tqdm(dataloader, desc=f"Epoch {epoch+1}", leave=False)
@@ -137,12 +148,13 @@ def main():
             
             epoch_iterator.set_postfix(loss=loss.item())
     
-    # 7. 保存 LoRA 权重
+    # 7. 用字典存 LoRA 权重
     lora_weights = {
         name: param.data for name, param in model.named_parameters()
         if 'lora_A' in name or 'lora_B' in name
     }
     Path(OUTPUT_DIR).mkdir(exist_ok=True)
+    
     torch.save(lora_weights, f"{OUTPUT_DIR}/{MODEL_NAME}.bin")
 
 if __name__ == "__main__":
