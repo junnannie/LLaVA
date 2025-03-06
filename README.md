@@ -17,21 +17,29 @@
 
 
 
-### 1.广东俚语版
+#### [测试图片](https://modelscope.cn-beijing.oss.aliyuncs.com/open_data/sa-1b-cot-qwen/sa_5581992.jpg)：
 
-![image](./images/广东本地人.png)
-
-
-
-### 2.暴躁老哥版
-
-![image](./images/暴躁老哥.png)
+![test1](images/test1.jpg)
 
 
 
-### 3.推销员版
+#### 风格1：暴躁回答版(语气带有一点着急)
 
-![image](./images/推销员.png)
+![2](images/2.png)
+
+
+
+#### 风格2：广东本地版(使用粤语中的地道词汇和语调)
+
+![3](images/3.png)
+
+
+
+#### 风格3：推销员版
+
+![4](images/4.png)
+
+
 
 
 
