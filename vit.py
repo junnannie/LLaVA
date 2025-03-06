@@ -6,6 +6,7 @@ class VisionTransformer(nn.Module):
     """
     ViT 是 encoder-only 的结构
     dim = 768, 特征维度
+    
     """
     def __init__(self, image_size = 224, patch_size = 16, num_classes = 1000,
                  dim = 768, depth = 12, heads = 12, mlp_dim = 3872):
