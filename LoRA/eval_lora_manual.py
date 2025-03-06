@@ -14,7 +14,8 @@ from lora_config import LoraConfig
 
 
 MODEL_PATH = "/mnt/workspace/llava-interleave-qwen-0.5b-hf"
-LORA_WEIGHT = "/mnt/workspace/lora_llava_finetuned_manual/lora_weights.bin"
+LORA_WEIGHT = "/mnt/workspace/lora_llava_finetuned_manual/writer.bin"
+# LORA_WEIGHT = "/mnt/workspace/lora_llava_finetuned_manual/anger.bin"
 
 lora_config = LoraConfig()
 
@@ -28,6 +29,7 @@ def main():
     # 加载模型和处理器
     model = LlavaForConditionalGeneration.from_pretrained(
         MODEL_PATH,
+        # bfloat16
         torch_dtype=torch.bfloat16,
         low_cpu_mem_usage=True,
     )
@@ -43,6 +45,7 @@ def main():
     lora_weights = torch.load(LORA_WEIGHT, map_location=device)
 
     for name, param in model.named_parameters():
+        # 寻找需要替换的 LoRA 权重
         if 'lora_A' in name or 'lora_B' in name:
             if name in lora_weights:
                 param.data.copy_(lora_weights[name])
@@ -57,7 +60,7 @@ def main():
     conversation = [{
         "role": "user",
         "content": [
-            {"type": "text", "text": "图片里是猫还是狗？"},
+            {"type": "text", "text": "图片里是什么？"},
             {"type": "image"},
         ],
     }]
