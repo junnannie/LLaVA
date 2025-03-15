@@ -54,6 +54,10 @@
 
 
 
+---
+
+
+
 ### 2.DeepSeek-V3 的作用
 
 在风格迁移过程中，DeepSeek-V3 采用预训练+微调的方式，结合 SA1B 数据集，通过指令调整和对比学习来生成不同风格的指令问答对。
@@ -93,7 +97,7 @@
 
 生成的数据以 JSON 格式组织，方便解析和训练。
 
-例如：
+例如以广东话风格生成的问答：
 
 ```json
 {
@@ -103,13 +107,25 @@
 }
 ```
 
+> 其中，广东话风格：
+>
+>  “哎呀，你睇下嗰个绿色牌仔，上面写住'1907 COASTGUARD STATION'啊！咁明显都睇唔到咩？快啲睇清楚啦！”
+>
+> 等于普通话 ：
+>
+> “哎呀，你看下那个绿色牌子，上面写着'1907 COASTGUARD STATION'啊！那么明显都看不到吗？快点看清楚啦！”
 
 
-我实现了三种不同风格的数据集：
 
-1. `data/angry.json`
-2. `data/guangdong_native.json`
-3. `data/saleman.json`
+此外，我实现了三种不同风格的数据集，都在 `data` 文件夹下：
+
+1. `data/angry.json` --- 暴躁回答版(语气带有一点着急)
+2. `data/guangdong_native.json` --- 广东本地版(使用粤语中的地道词汇和语调)
+3. `data/saleman.json` --- 推销员版
+
+
+
+鉴于篇幅，构造数据集的具体实现请参考：`data/make_data.py`
 
 
 
@@ -117,13 +133,36 @@
 
 #### 1.为什么要 LoRA 微调？
 
-以 LLaVA-7B 为例，使用 `Float32`，模型参数 7B $\times$ 4 = 28GB，梯度 7B $\times$ 4 = 28GB， Adam 存储动量 7B $\times$ 8 = 56GB，这里就至少占用了 112G 显存了。所以要么量化到 `INT8`，要么就做 LoRA 微调。
+- 直接微调整个 LLaMA 模型需要大量计算资源，而 LoRA 只调整部分权重，大幅减少显存占用和计算需求
+- LoRA 不会破坏原始 LLM 预训练的知识，所以用少量数据即可收敛，不需要大规模数据训练
+- 可拓展性强，可使用不同的 LoRA 适配器来快速切换不同的任务，共享同一个 LLaVA 模型，只针对特定人物进行 LoRA 适配。
+
+例如，在 `chat_lora.py` 文件中，有这么一段代码：
+
+```python
+if user_input == "Switch style to angry":
+		lora_name = "angry"
+elif user_input == "Switch style to saleman":
+		lora_name = "saleman"
+elif user_input == "Switch style to guangdong_native":
+		lora_name = "guangdong_native"
+elif user_input == "Switch style to base":
+		lora_name = "base"
+```
+
+在命令行中输入 `Switch style to your style`，就可以在不重新加载模型的情况下实现不同风格的切换。
+
+ 
+
+
+
+---
 
 
 
 #### 2. LoRA 微调下调整了多少参数量？
 
-LoRA 中设置为：$r=8$，$\alpha=16$
+LoRA 中设置为：r=8，alpha=16
 
 ```python
 # Qwen-0.5B
@@ -132,10 +171,7 @@ trainable params: 3,489,792 || all params: 867,521,056 || trainable%: 0.4023
 
 
 
-```python
-# LLaVA-7B
-trainable params: 9,961,472 || all params: 7,073,388,544 || trainable%: 0.1408
-```
+---
 
 
 
@@ -151,13 +187,7 @@ trainable params: 9,961,472 || all params: 7,073,388,544 || trainable%: 0.1408
         model_inputs["labels"][idx, :start_pos] = -100
 ```
 
-Qwen2的 `assistant` 的 token 的索引就是77091，这一段是为了找到模型回答内容中 assistant 的位置，只对 assistant 后面的回答做监督。
-
-
-
-#### 4. 多少个 Decoder？
-
-答：以 Qwen-0.5B 为例，千问模型中有24个 Decoder，26个 SiglipEncoder
+Qwen的 `assistant` 的 token 的索引就是77091，这是为了找到模型回答内容中 assistant 的位置，只对 assistant 后面的回答做监督。
 
 
 
@@ -192,9 +222,6 @@ git lfs install
 
 # Qwen-0.5B
 git clone https://www.modelscope.cn/llava-hf/llava-interleave-qwen-0.5b-hf.git
-
-# LLaVA 7B
-git clone https://www.modelscope.cn/llava-hf/llava-1.5-7b-hf.git
 ```
 
 
@@ -230,6 +257,3 @@ python train.py
 # 测试
 python chat.py
 ```
-
-
-
