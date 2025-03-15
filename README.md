@@ -141,13 +141,13 @@
 
 ```python
 if user_input == "Switch style to angry":
-		lora_name = "angry"
+    lora_name = "angry"
 elif user_input == "Switch style to saleman":
-		lora_name = "saleman"
+    lora_name = "saleman"
 elif user_input == "Switch style to guangdong_native":
-		lora_name = "guangdong_native"
+    lora_name = "guangdong_native"
 elif user_input == "Switch style to base":
-		lora_name = "base"
+    lora_name = "base"
 ```
 
 在命令行中输入 `Switch style to your style`，就可以在不重新加载模型的情况下实现不同风格的切换。
